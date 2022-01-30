@@ -1,17 +1,17 @@
-<?php namespace Aliyun\SLS\Log;
+<?php
 
-use Aliyun\SLS\Exception;
+namespace Aliyun\SLS\Log;
+
 use Aliyun\SLS\Protobuf;
+use Aliyun\SLS\Exception;
 
 class LogGroupList
 {
-
     private $_unknown;
 
-    private $logGroupList_ = null;
+    private $logGroupList_;
 
-
-    function __construct($in = null, &$limit = PHP_INT_MAX)
+    public function __construct($in = null, &$limit = PHP_INT_MAX)
     {
         if ($in !== null) {
             if (is_string($in)) {
@@ -29,11 +29,11 @@ class LogGroupList
         }
     }
 
-
-    function read($fp, &$limit = PHP_INT_MAX)
+    public function read($fp, &$limit = PHP_INT_MAX)
     {
-        while ( ! feof($fp) && $limit > 0) {
+        while (!feof($fp) && $limit > 0) {
             $tag = Protobuf::read_varint($fp, $limit);
+
             if ($tag === false) {
                 break;
             }
@@ -44,6 +44,7 @@ class LogGroupList
                 case 1:
                     assert('$wire == 2');
                     $len = Protobuf::read_varint($fp, $limit);
+
                     if ($len === false) {
                         throw new Exception('Protobuf::read_varint returned false');
                     }
@@ -52,28 +53,31 @@ class LogGroupList
                     assert('$len == 0');
                     break;
                 default:
-                    $this->_unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field($fp, $wire,
-                        $limit);
+                    $this->_unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field(
+                        $fp,
+                        $wire,
+                        $limit
+                    );
             }
         }
-        if ( ! $this->validateRequired()) {
+
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
     }
-
 
     public function validateRequired()
     {
         return true;
     }
 
-
-    function write($fp)
+    public function write($fp)
     {
-        if ( ! $this->validateRequired()) {
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
-        if ( ! is_null($this->logGroupList_)) {
+
+        if (!is_null($this->logGroupList_)) {
             foreach ($this->logGroupList_ as $v) {
                 fwrite($fp, "\x0a");
                 Protobuf::write_varint($fp, $v->size()); // message
@@ -82,11 +86,11 @@ class LogGroupList
         }
     }
 
-
     public function size()
     {
         $size = 0;
-        if ( ! is_null($this->logGroupList_)) {
+
+        if (!is_null($this->logGroupList_)) {
             foreach ($this->logGroupList_ as $v) {
                 $l = $v->size();
                 $size += 1 + Protobuf::size_varint($l) + $l;
@@ -96,60 +100,53 @@ class LogGroupList
         return $size;
     }
 
-
     // repeated .LogGroup logGroupList = 1;
-
 
     public function __toString()
     {
-        return '' . Protobuf::toString('unknown', $this->_unknown) . Protobuf::toString('logGroupList_',
-            $this->logGroupList_);
+        return '' . Protobuf::toString('unknown', $this->_unknown) . Protobuf::toString(
+            'logGroupList_',
+            $this->logGroupList_
+        );
     }
-
 
     public function clearLogGroupList()
     {
         $this->logGroupList_ = null;
     }
 
-
     public function getLogGroupListCount()
     {
         if ($this->logGroupList_ === null) {
             return 0;
-        } else {
-            return count($this->logGroupList_);
         }
-    }
 
+        return count($this->logGroupList_);
+    }
 
     public function getLogGroupList($index)
     {
         return $this->logGroupList_[$index];
     }
 
-
     public function setLogGroupList($index, $value)
     {
         $this->logGroupList_[$index] = $value;
     }
 
-
     public function getLogGroupListArray()
     {
         if ($this->logGroupList_ === null) {
-            return array();
-        } else {
-            return $this->logGroupList_;
+            return [];
         }
-    }
 
+        return $this->logGroupList_;
+    }
 
     public function addLogGroupList($value)
     {
         $this->logGroupList_[] = $value;
     }
-
 
     public function addAllLogGroupList(array $values)
     {

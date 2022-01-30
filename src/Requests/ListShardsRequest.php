@@ -1,20 +1,22 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * @author log service dev
  */
 class ListShardsRequest extends Request
 {
-
     private $logStore;
 
-
     /**
-     * ListShardsRequest Constructor
+     * ListShardsRequest Constructor.
      *
+     * @param mixed $project
+     * @param mixed $logStore
      */
     public function __construct($project, $logStore)
     {
@@ -22,16 +24,13 @@ class ListShardsRequest extends Request
         $this->logStore = $logStore;
     }
 
-
     public function getLogStore()
     {
         return $this->logStore;
     }
 
-
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
-
 }

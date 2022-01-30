@@ -1,17 +1,19 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the ListLogStores API from log service.
+ *
  * @author log service dev
  */
 class ListLogStoresResponse extends Response
 {
-
     /**
-     * @var integer the number of total logStores from the response
+     * @var int the number of total logStores from the response
      */
     private $count;
 
@@ -20,9 +22,8 @@ class ListLogStoresResponse extends Response
      */
     private $logStores;
 
-
     /**
-     * ListLogStoresResponse constructor
+     * ListLogStoresResponse constructor.
      *
      * @param array $resp   ListLogStores HTTP response body
      * @param array $header ListLogStores HTTP response header
@@ -30,24 +31,22 @@ class ListLogStoresResponse extends Response
     public function __construct($resp, $header)
     {
         parent::__construct($header);
-        $this->count     = $resp ['total'];
-        $this->logStores = $resp ['logStores'];
+        $this->count     = $resp['total'];
+        $this->logStores = $resp['logStores'];
     }
 
-
     /**
-     * Get total count of logStores from the response
+     * Get total count of logStores from the response.
      *
-     * @return integer the number of total logStores from the response
+     * @return int the number of total logStores from the response
      */
     public function getCount()
     {
         return $this->count;
     }
 
-
     /**
-     * Get all the logStores from the response
+     * Get all the logStores from the response.
      *
      * @return array all logStore
      */

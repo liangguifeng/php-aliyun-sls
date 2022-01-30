@@ -1,19 +1,19 @@
-<?php namespace Aliyun\SLS\Log;
+<?php
 
-use Aliyun\SLS\Exception;
+namespace Aliyun\SLS\Log;
+
 use Aliyun\SLS\Protobuf;
+use Aliyun\SLS\Exception;
 
 class Log
 {
-
     private $unknown;
 
-    private $time = null;
+    private $time;
 
-    private $contents = null;
+    private $contents;
 
-
-    function __construct($in = null, &$limit = PHP_INT_MAX)
+    public function __construct($in = null, &$limit = PHP_INT_MAX)
     {
         if ($in !== null) {
             if (is_string($in)) {
@@ -31,11 +31,11 @@ class Log
         }
     }
 
-
-    function read($fp, &$limit = PHP_INT_MAX)
+    public function read($fp, &$limit = PHP_INT_MAX)
     {
-        while ( ! feof($fp) && $limit > 0) {
+        while (!feof($fp) && $limit > 0) {
             $tag = Protobuf::read_varint($fp, $limit);
+
             if ($tag === false) {
                 break;
             }
@@ -46,6 +46,7 @@ class Log
                 case 1:
                     assert('$wire == 0');
                     $tmp = Protobuf::read_varint($fp, $limit);
+
                     if ($tmp === false) {
                         throw new Exception('Protobuf::read_varint returned false');
                     }
@@ -55,6 +56,7 @@ class Log
                 case 2:
                     assert('$wire == 2');
                     $len = Protobuf::read_varint($fp, $limit);
+
                     if ($len === false) {
                         throw new Exception('Protobuf::read_varint returned false');
                     }
@@ -63,15 +65,18 @@ class Log
                     assert('$len == 0');
                     break;
                 default:
-                    $this->unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field($fp, $wire,
-                        $limit);
+                    $this->unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field(
+                        $fp,
+                        $wire,
+                        $limit
+                    );
             }
         }
-        if ( ! $this->validateRequired()) {
+
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
     }
-
 
     public function validateRequired()
     {
@@ -82,17 +87,18 @@ class Log
         return true;
     }
 
-
-    function write($fp)
+    public function write($fp)
     {
-        if ( ! $this->validateRequired()) {
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
-        if ( ! is_null($this->time)) {
+
+        if (!is_null($this->time)) {
             fwrite($fp, "\x08");
             Protobuf::write_varint($fp, $this->time);
         }
-        if ( ! is_null($this->contents)) {
+
+        if (!is_null($this->contents)) {
             foreach ($this->contents as $v) {
                 fwrite($fp, "\x12");
                 Protobuf::write_varint($fp, $v->size()); // message
@@ -101,16 +107,17 @@ class Log
         }
     }
 
-
     // required uint32 time = 1;
 
     public function size()
     {
         $size = 0;
-        if ( ! is_null($this->time)) {
+
+        if (!is_null($this->time)) {
             $size += 1 + Protobuf::size_varint($this->time);
         }
-        if ( ! is_null($this->contents)) {
+
+        if (!is_null($this->contents)) {
             foreach ($this->contents as $v) {
                 $l = $v->size();
                 $size += 1 + Protobuf::size_varint($l) + $l;
@@ -120,35 +127,32 @@ class Log
         return $size;
     }
 
-
     public function __toString()
     {
-        return '' . Protobuf::toString('unknown', $this->unknown) . Protobuf::toString('time_',
-            $this->time) . Protobuf::toString('contents_', $this->contents);
+        return '' . Protobuf::toString('unknown', $this->unknown) . Protobuf::toString(
+            'time_',
+            $this->time
+        ) . Protobuf::toString('contents_', $this->contents);
     }
-
 
     public function clearTime()
     {
         $this->time = null;
     }
 
-
     public function hasTime()
     {
         return $this->time !== null;
     }
 
-
     public function getTime()
     {
         if ($this->time === null) {
             return 0;
-        } else {
-            return $this->time;
         }
-    }
 
+        return $this->time;
+    }
 
     // repeated .Log.Content contents = 2;
 
@@ -157,50 +161,43 @@ class Log
         $this->time = $value;
     }
 
-
     public function clearContents()
     {
         $this->contents = null;
     }
 
-
     public function getContentsCount()
     {
         if ($this->contents === null) {
             return 0;
-        } else {
-            return count($this->contents);
         }
-    }
 
+        return count($this->contents);
+    }
 
     public function getContents($index)
     {
         return $this->contents[$index];
     }
 
-
     public function setContents($index, $value)
     {
         $this->contents[$index] = $value;
     }
 
-
     public function getContentsArray()
     {
         if ($this->contents === null) {
-            return array();
-        } else {
-            return $this->contents;
+            return [];
         }
-    }
 
+        return $this->contents;
+    }
 
     public function addContent($value)
     {
         $this->contents[] = $value;
     }
-
 
     public function addAllContents(array $values)
     {

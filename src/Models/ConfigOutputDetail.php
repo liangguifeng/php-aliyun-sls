@@ -1,12 +1,12 @@
-<?php namespace Aliyun\SLS\Models;
+<?php
+
+namespace Aliyun\SLS\Models;
 
 class ConfigOutputDetail
 {
-
     public $projectName;
 
     public $logStoreName;
-
 
     public function __construct($projectName = '', $logStoreName = '')
     {
@@ -14,13 +14,14 @@ class ConfigOutputDetail
         $this->logStoreName = $logStoreName;
     }
 
-
     public function toArray()
     {
-        $resArray = array();
+        $resArray = [];
+
         if ($this->projectName !== null) {
             $resArray['projectName'] = $this->projectName;
         }
+
         if ($this->logStoreName !== null) {
             $resArray['logStoreName'] = $this->logStoreName;
         }

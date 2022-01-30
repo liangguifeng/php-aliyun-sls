@@ -1,17 +1,19 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the ListTopics API from log service.
+ *
  * @author log service dev
  */
 class ListTopicsResponse extends Response
 {
-
     /**
-     * @var integer the number of all the topics from the response
+     * @var int the number of all the topics from the response
      */
     private $count;
 
@@ -25,9 +27,8 @@ class ListTopicsResponse extends Response
      */
     private $nextToken;
 
-
     /**
-     * ListTopicsResponse constructor
+     * ListTopicsResponse constructor.
      *
      * @param array $resp   ListTopics HTTP response body
      * @param array $header ListTopics HTTP response header
@@ -37,23 +38,21 @@ class ListTopicsResponse extends Response
         parent::__construct($header);
         $this->count     = $header['x-log-count'];
         $this->topics    = $resp;
-        $this->nextToken = isset ( $header['x-log-nexttoken'] ) ? $header['x-log-nexttoken'] : null;
+        $this->nextToken = isset($header['x-log-nexttoken']) ? $header['x-log-nexttoken'] : null;
     }
 
-
     /**
-     * Get the number of all the topics from the response
+     * Get the number of all the topics from the response.
      *
-     * @return integer the number of all the topics from the response
+     * @return int the number of all the topics from the response
      */
     public function getCount()
     {
         return $this->count;
     }
 
-
     /**
-     * Get all the topics from the response
+     * Get all the topics from the response.
      *
      * @return array topics list
      */
@@ -62,9 +61,8 @@ class ListTopicsResponse extends Response
         return $this->topics;
     }
 
-
     /**
-     * Return the next token from the response. If there is no more topic to list, it will return None
+     * Return the next token from the response. If there is no more topic to list, it will return None.
      *
      * @return string/null next token used to list more topics
      */

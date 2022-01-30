@@ -1,41 +1,39 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 use Aliyun\SLS\Models\MachineGroup;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * @author log service dev
  */
 class CreateMachineGroupRequest extends Request
 {
-
     /**
      * @var MachineGroup
      */
     private $machineGroup;
 
-
     /**
-     * CreateMachineGroupRequest Constructor
+     * CreateMachineGroupRequest Constructor.
      *
+     * @param null|mixed $machineGroup
      */
     public function __construct($machineGroup = null)
     {
         $this->machineGroup = $machineGroup;
     }
 
-
     public function getMachineGroup()
     {
         return $this->machineGroup;
     }
 
-
     public function setMachineGroup($machineGroup)
     {
         $this->machineGroup = $machineGroup;
     }
-
 }

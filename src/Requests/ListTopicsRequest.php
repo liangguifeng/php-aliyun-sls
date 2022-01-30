@@ -1,8 +1,10 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The Request used to list topics from log service.
  *
@@ -10,30 +12,28 @@
  */
 class ListTopicsRequest extends Request
 {
-
     /**
-     * @var string $logStore logStore name
+     * @var string logStore name
      */
     private $logStore;
 
     /**
-     * @var string $token the start token to list topics
+     * @var string the start token to list topics
      */
     private $token;
 
     /**
-     * @var integer $line max topic counts to return
+     * @var int max topic counts to return
      */
     private $line;
 
-
     /**
-     * ListTopicsRequest constructor
+     * ListTopicsRequest constructor.
      *
-     * @param string  $project  project name
-     * @param string  $logStore logStore name
-     * @param string  $token    the start token to list topics
-     * @param integer $line     max topic counts to return
+     * @param string $project  project name
+     * @param string $logStore logStore name
+     * @param string $token    the start token to list topics
+     * @param int    $line     max topic counts to return
      */
     public function __construct($project = null, $logStore = null, $token = null, $line = null)
     {
@@ -43,9 +43,8 @@ class ListTopicsRequest extends Request
         $this->line     = $line;
     }
 
-
     /**
-     * Get logStore  name
+     * Get logStore  name.
      *
      * @return string logStore name
      */
@@ -54,21 +53,19 @@ class ListTopicsRequest extends Request
         return $this->logStore;
     }
 
-
     /**
-     * Set logStore name
+     * Set logStore name.
      *
      * @param string $logStore
-     *            logStore name
+     *                         logStore name
      */
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
 
-
     /**
-     * Get start token to list topics
+     * Get start token to list topics.
      *
      * @return string start token to list topics
      */
@@ -77,9 +74,8 @@ class ListTopicsRequest extends Request
         return $this->token;
     }
 
-
     /**
-     * Set start token to list topics
+     * Set start token to list topics.
      *
      * @param string $token start token to list topics
      */
@@ -88,22 +84,20 @@ class ListTopicsRequest extends Request
         $this->token = $token;
     }
 
-
     /**
-     * Get max topic counts to return
+     * Get max topic counts to return.
      *
-     * @return integer max topic counts to return
+     * @return int max topic counts to return
      */
     public function getLine()
     {
         return $this->line;
     }
 
-
     /**
-     * Set max topic counts to return
+     * Set max topic counts to return.
      *
-     * @param integer $line max topic counts to return
+     * @param int $line max topic counts to return
      */
     public function setLine($line)
     {

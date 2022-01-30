@@ -1,17 +1,19 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the GetLog API from log service.
+ *
  * @author log service dev
  */
 class CreateMachineGroupResponse extends Response
 {
-
     /**
-     * CreateMachineGroupResponse constructor
+     * CreateMachineGroupResponse constructor.
      *
      * @param array $resp   GetLogs HTTP response body
      * @param array $header GetLogs HTTP response header
@@ -20,5 +22,4 @@ class CreateMachineGroupResponse extends Response
     {
         parent::__construct($header);
     }
-
 }

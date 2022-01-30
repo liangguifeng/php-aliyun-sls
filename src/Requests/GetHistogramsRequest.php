@@ -1,15 +1,17 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to get histograms of a query from log service.
+ *
  * @author log service dev
  */
 class GetHistogramsRequest extends Request
 {
-
     /**
      * @var string logStore name
      */
@@ -21,12 +23,12 @@ class GetHistogramsRequest extends Request
     private $topic;
 
     /**
-     * @var integer the begin time
+     * @var int the begin time
      */
     private $from;
 
     /**
-     * @var integer the end time
+     * @var int the end time
      */
     private $to;
 
@@ -35,16 +37,15 @@ class GetHistogramsRequest extends Request
      */
     private $query;
 
-
     /**
-     * GetHistogramsRequest constructor
+     * GetHistogramsRequest constructor.
      *
-     * @param string  $project  project name
-     * @param string  $logStore logStore name
-     * @param integer $from     the begin time
-     * @param integer $to       the end time
-     * @param string  $topic    topic name of logs
-     * @param string  $query    user defined query
+     * @param string $project  project name
+     * @param string $logStore logStore name
+     * @param int    $from     the begin time
+     * @param int    $to       the end time
+     * @param string $topic    topic name of logs
+     * @param string $query    user defined query
      */
     public function __construct(
         $project = null,
@@ -62,9 +63,8 @@ class GetHistogramsRequest extends Request
         $this->query    = $query;
     }
 
-
     /**
-     * Get logStore name
+     * Get logStore name.
      *
      * @return string logStore name
      */
@@ -73,21 +73,19 @@ class GetHistogramsRequest extends Request
         return $this->logStore;
     }
 
-
     /**
-     * Set logStore name
+     * Set logStore name.
      *
      * @param string $logStore
-     *            logStore name
+     *                         logStore name
      */
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
 
-
     /**
-     * Get topic name
+     * Get topic name.
      *
      * @return string topic name
      */
@@ -96,67 +94,61 @@ class GetHistogramsRequest extends Request
         return $this->topic;
     }
 
-
     /**
-     * Set topic name
+     * Set topic name.
      *
      * @param string $topic
-     *            topic name
+     *                      topic name
      */
     public function setTopic($topic)
     {
         $this->topic = $topic;
     }
 
-
     /**
-     * Get begin time
+     * Get begin time.
      *
-     * @return integer begin time
+     * @return int begin time
      */
     public function getFrom()
     {
         return $this->from;
     }
 
-
     /**
-     * Set begin time
+     * Set begin time.
      *
-     * @param integer $from
-     *            begin time
+     * @param int $from
+     *                  begin time
      */
     public function setFrom($from)
     {
         $this->from = $from;
     }
 
-
     /**
-     * Get end time
+     * Get end time.
      *
-     * @return integer end time
+     * @return int end time
      */
     public function getTo()
     {
         return $this->to;
     }
 
-
     /**
-     * Set end time
+     * Set end time.
      *
-     * @param integer $to
-     *            end time
+     * @param int $to
+     *                end time
      */
     public function setTo($to)
     {
         $this->to = $to;
     }
 
-
     /**
-     * Get user defined query
+     * Get user defined query.
      *
      * @return string user defined query
      */
@@ -165,12 +157,11 @@ class GetHistogramsRequest extends Request
         return $this->query;
     }
 
-
     /**
-     * Set user defined query
+     * Set user defined query.
      *
      * @param string $query
-     *            user defined query
+     *                      user defined query
      */
     public function setQuery($query)
     {

@@ -1,17 +1,17 @@
-<?php namespace Aliyun\SLS\Log;
+<?php
 
-use Aliyun\SLS\Exception;
+namespace Aliyun\SLS\Log;
+
 use Aliyun\SLS\Protobuf;
+use Aliyun\SLS\Exception;
 
 class LogPackageList
 {
-
     private $_unknown;
 
-    private $packages_ = null;
+    private $packages_;
 
-
-    function __construct($in = null, &$limit = PHP_INT_MAX)
+    public function __construct($in = null, &$limit = PHP_INT_MAX)
     {
         if ($in !== null) {
             if (is_string($in)) {
@@ -29,11 +29,11 @@ class LogPackageList
         }
     }
 
-
-    function read($fp, &$limit = PHP_INT_MAX)
+    public function read($fp, &$limit = PHP_INT_MAX)
     {
-        while ( ! feof($fp) && $limit > 0) {
+        while (!feof($fp) && $limit > 0) {
             $tag = Protobuf::read_varint($fp, $limit);
+
             if ($tag === false) {
                 break;
             }
@@ -44,6 +44,7 @@ class LogPackageList
                 case 1:
                     assert('$wire == 2');
                     $len = Protobuf::read_varint($fp, $limit);
+
                     if ($len === false) {
                         throw new Exception('Protobuf::read_varint returned false');
                     }
@@ -52,28 +53,31 @@ class LogPackageList
                     assert('$len == 0');
                     break;
                 default:
-                    $this->_unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field($fp, $wire,
-                        $limit);
+                    $this->_unknown[$field . '-' . Protobuf::get_wiretype($wire)][] = Protobuf::read_field(
+                        $fp,
+                        $wire,
+                        $limit
+                    );
             }
         }
-        if ( ! $this->validateRequired()) {
+
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
     }
-
 
     public function validateRequired()
     {
         return true;
     }
 
-
-    function write($fp)
+    public function write($fp)
     {
-        if ( ! $this->validateRequired()) {
+        if (!$this->validateRequired()) {
             throw new Exception('Required fields are missing');
         }
-        if ( ! is_null($this->packages_)) {
+
+        if (!is_null($this->packages_)) {
             foreach ($this->packages_ as $v) {
                 fwrite($fp, "\x0a");
                 Protobuf::write_varint($fp, $v->size()); // message
@@ -82,11 +86,11 @@ class LogPackageList
         }
     }
 
-
     public function size()
     {
         $size = 0;
-        if ( ! is_null($this->packages_)) {
+
+        if (!is_null($this->packages_)) {
             foreach ($this->packages_ as $v) {
                 $l = $v->size();
                 $size += 1 + Protobuf::size_varint($l) + $l;
@@ -96,7 +100,6 @@ class LogPackageList
         return $size;
     }
 
-
     // repeated .LogPackage packages = 1;
 
     public function __toString()
@@ -104,50 +107,43 @@ class LogPackageList
         return '' . Protobuf::toString('unknown', $this->_unknown) . Protobuf::toString('packages_', $this->packages_);
     }
 
-
     public function clearPackages()
     {
         $this->packages_ = null;
     }
 
-
     public function getPackagesCount()
     {
         if ($this->packages_ === null) {
             return 0;
-        } else {
-            return count($this->packages_);
         }
-    }
 
+        return count($this->packages_);
+    }
 
     public function getPackages($index)
     {
         return $this->packages_[$index];
     }
 
-
     public function setPackages($index, $value)
     {
         $this->packages_[$index] = $value;
     }
 
-
     public function getPackagesArray()
     {
         if ($this->packages_ === null) {
-            return array();
-        } else {
-            return $this->packages_;
+            return [];
         }
-    }
 
+        return $this->packages_;
+    }
 
     public function addPackages($value)
     {
         $this->packages_[] = $value;
     }
-
 
     public function addAllPackages(array $values)
     {

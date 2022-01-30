@@ -9,6 +9,7 @@ use Aliyun\SLS\Responses\ResponseCore;
  * Handles all HTTP requests using cURL and manages the responses.
  *
  * @version   2011.06.07
+ *
  * @copyright 2006-2011 Ryan Parman
  * @copyright 2006-2010 Foleeo Inc.
  * @copyright 2010-2011 Amazon.com, Inc. or its affiliates.
@@ -17,29 +18,28 @@ use Aliyun\SLS\Responses\ResponseCore;
  */
 class RequestCore
 {
-
     /**
-     * GET HTTP Method
+     * GET HTTP Method.
      */
     const HTTP_GET = 'GET';
 
     /**
-     * POST HTTP Method
+     * POST HTTP Method.
      */
     const HTTP_POST = 'POST';
 
     /**
-     * PUT HTTP Method
+     * PUT HTTP Method.
      */
     const HTTP_PUT = 'PUT';
 
     /**
-     * DELETE HTTP Method
+     * DELETE HTTP Method.
      */
     const HTTP_DELETE = 'DELETE';
 
     /**
-     * HEAD HTTP Method
+     * HEAD HTTP Method.
      */
     const HTTP_HEAD = 'HEAD';
 
@@ -96,22 +96,22 @@ class RequestCore
     /**
      * Stores the proxy settings to use for the request.
      */
-    public $proxy = null;
+    public $proxy;
 
     /**
      * The username to use for the request.
      */
-    public $username = null;
+    public $username;
 
     /**
      * The password to use for the request.
      */
-    public $password = null;
+    public $password;
 
     /**
      * Custom CURLOPT settings.
      */
-    public $curlopts = null;
+    public $curlopts;
 
     /**
      * The state of debug mode.
@@ -136,17 +136,17 @@ class RequestCore
     /**
      * File to read from while streaming up.
      */
-    public $read_file = null;
+    public $read_file;
 
     /**
      * The resource to read from while streaming up.
      */
-    public $read_stream = null;
+    public $read_stream;
 
     /**
      * The size of the stream to read from.
      */
-    public $read_stream_size = null;
+    public $read_stream_size;
 
     /**
      * The length already read from the stream.
@@ -156,20 +156,20 @@ class RequestCore
     /**
      * File to write to while streaming down.
      */
-    public $write_file = null;
+    public $write_file;
 
     /**
      * The resource to write to while streaming down.
      */
-    public $write_stream = null;
+    public $write_stream;
 
-    /*%******************************************************************************************%*/
+    // %******************************************************************************************%
     // CONSTANTS
 
     /**
      * Stores the intended starting seek position.
      */
-    public $seek_position = null;
+    public $seek_position;
 
     /**
      * The location of the cacert.pem file to use.
@@ -184,42 +184,42 @@ class RequestCore
     /**
      * The user-defined callback function to call when a stream is read from.
      */
-    public $registered_streaming_read_callback = null;
+    public $registered_streaming_read_callback;
 
     /**
      * The user-defined callback function to call when a stream is written to.
      */
-    public $registered_streaming_write_callback = null;
+    public $registered_streaming_write_callback;
 
-    /*%******************************************************************************************%*/
+    // %******************************************************************************************%
     // CONSTRUCTOR/DESTRUCTOR
 
     /**
      * Constructs a new instance of this class.
      *
-     * @param string $url     (Optional) The URL to request or service endpoint to query.
+     * @param string $url     (Optional) The URL to request or service endpoint to query
      * @param string $proxy   (Optional) The faux-url to use for proxy settings. Takes the following format:
      *                        `proxy://user:pass@hostname:port`
      * @param array  $helpers (Optional) An associative array of classnames to use for request, and response
      *                        functionality. Gets passed in automatically by the calling class.
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function __construct($url = null, $proxy = null, $helpers = null)
     {
         // Set some default values.
         $this->request_url     = $url;
         $this->method          = self::HTTP_GET;
-        $this->request_headers = array();
+        $this->request_headers = [];
         $this->request_body    = '';
 
         // Set a new Request class if one was set.
-        if (isset( $helpers['request'] ) && ! empty( $helpers['request'] )) {
+        if (isset($helpers['request']) && !empty($helpers['request'])) {
             $this->request_class = $helpers['request'];
         }
 
         // Set a new Request class if one was set.
-        if (isset( $helpers['response'] ) && ! empty( $helpers['response'] )) {
+        if (isset($helpers['response']) && !empty($helpers['response'])) {
             $this->response_class = $helpers['response'];
         }
 
@@ -230,56 +230,53 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Set the proxy to use for making requests.
      *
      * @param string $proxy (Required) The faux-url to use for proxy settings. Takes the following format:
      *                      `proxy://user:pass@hostname:port`
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_proxy($proxy)
     {
         $proxy         = parse_url($proxy);
-        $proxy['user'] = isset( $proxy['user'] ) ? $proxy['user'] : null;
-        $proxy['pass'] = isset( $proxy['pass'] ) ? $proxy['pass'] : null;
-        $proxy['port'] = isset( $proxy['port'] ) ? $proxy['port'] : null;
+        $proxy['user'] = isset($proxy['user']) ? $proxy['user'] : null;
+        $proxy['pass'] = isset($proxy['pass']) ? $proxy['pass'] : null;
+        $proxy['port'] = isset($proxy['port']) ? $proxy['port'] : null;
         $this->proxy   = $proxy;
 
         return $this;
     }
 
-
-    /*%******************************************************************************************%*/
+    // %******************************************************************************************%
     // REQUEST METHODS
 
     /**
      * Destructs the instance. Closes opened file handles.
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function __destruct()
     {
-        if (isset( $this->read_file ) && isset( $this->read_stream )) {
+        if (isset($this->read_file, $this->read_stream)) {
             fclose($this->read_stream);
         }
 
-        if (isset( $this->write_file ) && isset( $this->write_stream )) {
+        if (isset($this->write_file, $this->write_stream)) {
             fclose($this->write_stream);
         }
 
         return $this;
     }
 
-
     /**
      * Sets the credentials to use for authentication.
      *
-     * @param string $user (Required) The username to authenticate with.
-     * @param string $pass (Required) The password to authenticate with.
+     * @param string $user (Required) The username to authenticate with
+     * @param string $pass (Required) The password to authenticate with
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_credentials($user, $pass)
     {
@@ -289,14 +286,13 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Adds a custom HTTP header to the cURL request.
      *
-     * @param string $key   (Required) The custom HTTP header to set.
-     * @param mixed  $value (Required) The value to assign to the custom HTTP header.
+     * @param string $key   (Required) The custom HTTP header to set
+     * @param mixed  $value (Required) The value to assign to the custom HTTP header
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function add_header($key, $value)
     {
@@ -305,31 +301,29 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Removes an HTTP header from the cURL request.
      *
-     * @param string $key (Required) The custom HTTP header to set.
+     * @param string $key (Required) The custom HTTP header to set
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function remove_header($key)
     {
-        if (isset( $this->request_headers[$key] )) {
-            unset( $this->request_headers[$key] );
+        if (isset($this->request_headers[$key])) {
+            unset($this->request_headers[$key]);
         }
 
         return $this;
     }
 
-
     /**
      * Set the method type for the request.
      *
      * @param string $method (Required) One of the following constants: <HTTP_GET>, <HTTP_POST>, <HTTP_PUT>,
-     *                       <HTTP_HEAD>, <HTTP_DELETE>.
+     *                       <HTTP_HEAD>, <HTTP_DELETE>
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_method($method)
     {
@@ -338,13 +332,12 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Sets a custom useragent string for the class.
      *
-     * @param string $ua (Required) The useragent string to use.
+     * @param string $ua (Required) The useragent string to use
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_useragent($ua)
     {
@@ -353,13 +346,12 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Set the body to send in the request.
      *
-     * @param string $body (Required) The textual content to send along in the body of the request.
+     * @param string $body (Required) The textual content to send along in the body of the request
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_body($body)
     {
@@ -368,13 +360,12 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Set the URL to make the request to.
      *
-     * @param string $url (Required) The URL to make the request to.
+     * @param string $url (Required) The URL to make the request to
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_request_url($url)
     {
@@ -382,7 +373,6 @@ class RequestCore
 
         return $this;
     }
-
 
     /**
      * Set additional CURLOPT settings. These will merge with the default settings, and override if
@@ -392,7 +382,7 @@ class RequestCore
      *                        existing CURLOPTs, and ones passed here will override the defaults. Keys should be the
      *                        `CURLOPT_*` constants, not strings.
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_curlopts($curlopts)
     {
@@ -401,13 +391,12 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Sets the file to read from while streaming up.
      *
-     * @param string $location (Required) The readable location to read from.
+     * @param string $location (Required) The readable location to read from
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_read_file($location)
     {
@@ -417,20 +406,19 @@ class RequestCore
         return $this->set_read_stream($read_file_handle);
     }
 
-
     /**
      * Sets the resource to read from while streaming up. Reads the stream from its current position until
      * EOF or `$size` bytes have been read. If `$size` is not given it will be determined by <php:fstat()> and
      * <php:ftell()>.
      *
-     * @param resource $resource (Required) The readable resource to read from.
-     * @param integer  $size     (Optional) The size of the stream to read.
+     * @param resource $resource (Required) The readable resource to read from
+     * @param int      $size     (Optional) The size of the stream to read
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_read_stream($resource, $size = null)
     {
-        if ( ! isset( $size ) || $size < 0) {
+        if (!isset($size) || $size < 0) {
             $stats = fstat($resource);
 
             if ($stats && $stats['size'] >= 0) {
@@ -447,13 +435,12 @@ class RequestCore
         return $this->set_read_stream_size($size);
     }
 
-
     /**
      * Sets the length in bytes to read from the stream while streaming up.
      *
-     * @param integer $size (Required) The length in bytes to read from the stream.
+     * @param int $size (Required) The length in bytes to read from the stream
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_read_stream_size($size)
     {
@@ -462,13 +449,12 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Sets the file to write to while streaming down.
      *
-     * @param string $location (Required) The writeable location to write to.
+     * @param string $location (Required) The writeable location to write to
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_write_file($location)
     {
@@ -478,13 +464,12 @@ class RequestCore
         return $this->set_write_stream($write_file_handle);
     }
 
-
     /**
      * Sets the resource to write to while streaming down.
      *
-     * @param resource $resource (Required) The writeable resource to write to.
+     * @param resource $resource (Required) The writeable resource to write to
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_write_stream($resource)
     {
@@ -493,21 +478,19 @@ class RequestCore
         return $this;
     }
 
-
     /**
      * Set the intended starting seek position.
      *
-     * @param integer $position (Required) The byte-position of the stream to begin reading from.
+     * @param int $position (Required) The byte-position of the stream to begin reading from
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function set_seek_position($position)
     {
-        $this->seek_position = isset( $position ) ? (integer) $position : null;
+        $this->seek_position = isset($position) ? (int) $position : null;
 
         return $this;
     }
-
 
     /**
      * Register a callback function to execute whenever a data stream is read from using
@@ -524,14 +507,14 @@ class RequestCore
      *    was transferred.</li>
      * </ul>
      *
-     * @param string|array|function $callback (Required) The callback function is called by <php:call_user_func()>, so
+     * @param array|function|string $callback (Required) The callback function is called by <php:call_user_func()>, so
      *                                        you can pass the following values: <ul>
      *                                        <li>The name of a global function to execute, passed as a string.</li>
      *                                        <li>A method to execute, passed as <code>array('ClassName',
      *                                        'MethodName')</code>.</li>
      *                                        <li>An anonymous function (PHP 5.3+).</li></ul>
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function register_streaming_read_callback($callback)
     {
@@ -539,7 +522,6 @@ class RequestCore
 
         return $this;
     }
-
 
     /**
      * Register a callback function to execute whenever a data stream is written to using
@@ -554,14 +536,14 @@ class RequestCore
      *    was transferred.</li>
      * </ul>
      *
-     * @param string|array|function $callback (Required) The callback function is called by <php:call_user_func()>, so
+     * @param array|function|string $callback (Required) The callback function is called by <php:call_user_func()>, so
      *                                        you can pass the following values: <ul>
      *                                        <li>The name of a global function to execute, passed as a string.</li>
      *                                        <li>A method to execute, passed as <code>array('ClassName',
      *                                        'MethodName')</code>.</li>
      *                                        <li>An anonymous function (PHP 5.3+).</li></ul>
      *
-     * @return $this A reference to the current instance.
+     * @return $this a reference to the current instance
      */
     public function register_streaming_write_callback($callback)
     {
@@ -570,18 +552,17 @@ class RequestCore
         return $this;
     }
 
-
-    /*%******************************************************************************************%*/
+    // %******************************************************************************************%
     // PREPARE, SEND, AND PROCESS REQUEST
 
     /**
      * A callback function that is invoked by cURL for streaming up.
      *
-     * @param resource $curl_handle (Required) The cURL handle for the request.
-     * @param resource $file_handle (Required) The open file handle resource.
-     * @param integer  $length      (Required) The maximum number of bytes to read.
+     * @param resource $curl_handle (Required) The cURL handle for the request
+     * @param resource $file_handle (Required) The open file handle resource
+     * @param int      $length      (Required) The maximum number of bytes to read
      *
-     * @return binary Binary data from a stream.
+     * @return binary binary data from a stream
      */
     public function streaming_read_callback($curl_handle, $file_handle, $length)
     {
@@ -592,14 +573,16 @@ class RequestCore
         }
 
         // If we're at the beginning of an upload and need to seek...
-        if ($this->read_stream_read == 0 && isset( $this->seek_position ) && $this->seek_position !== ftell($this->read_stream)) {
+        if ($this->read_stream_read == 0 && isset($this->seek_position) && $this->seek_position !== ftell($this->read_stream)) {
             if (fseek($this->read_stream, $this->seek_position) !== 0) {
                 throw new Exception('[RequestCoreException] The stream does not support seeking and is either not at the requested position or the position is unknown.');
             }
         }
 
-        $read = fread($this->read_stream, min($this->read_stream_size - $this->read_stream_read,
-            $length)); // Remaining upload data or cURL's requested chunk size
+        $read = fread($this->read_stream, min(
+            $this->read_stream_size - $this->read_stream_read,
+            $length
+        )); // Remaining upload data or cURL's requested chunk size
         $this->read_stream_read += strlen($read);
 
         $out = $read === false ? '' : $read;
@@ -612,14 +595,13 @@ class RequestCore
         return $out;
     }
 
-
     /**
      * A callback function that is invoked by cURL for streaming down.
      *
-     * @param resource $curl_handle (Required) The cURL handle for the request.
-     * @param binary   $data        (Required) The data to write.
+     * @param resource $curl_handle (Required) The cURL handle for the request
+     * @param binary   $data        (Required) The data to write
      *
-     * @return integer The number of bytes written.
+     * @return int the number of bytes written
      */
     public function streaming_write_callback($curl_handle, $data)
     {
@@ -645,13 +627,12 @@ class RequestCore
         return $written_total;
     }
 
-
     /**
      * Sends the request, calling necessary utility functions to update built-in properties.
      *
-     * @param boolean $parse (Optional) Whether to parse the response with ResponseCore or not.
+     * @param bool $parse (Optional) Whether to parse the response with ResponseCore or not
      *
-     * @return string The resulting unparsed data from the request.
+     * @return string the resulting unparsed data from the request
      */
     public function send_request($parse = false)
     {
@@ -675,12 +656,11 @@ class RequestCore
         return $this->response;
     }
 
-
     /**
      * Prepares and adds the details of the cURL request. This can be passed along to a <php:curl_multi_exec()>
      * function.
      *
-     * @return resource The handle for the cURL object.
+     * @return resource the handle for the cURL object
      */
     public function prep_request()
     {
@@ -698,7 +678,7 @@ class RequestCore
         curl_setopt($curl_handle, CURLOPT_NOSIGNAL, true);
         curl_setopt($curl_handle, CURLOPT_REFERER, $this->request_url);
         curl_setopt($curl_handle, CURLOPT_USERAGENT, $this->useragent);
-        curl_setopt($curl_handle, CURLOPT_READFUNCTION, array( $this, 'streaming_read_callback' ));
+        curl_setopt($curl_handle, CURLOPT_READFUNCTION, [$this, 'streaming_read_callback']);
 
         // Verification of the SSL cert
         if ($this->ssl_verification) {
@@ -722,7 +702,7 @@ class RequestCore
         }
 
         // Handle open_basedir & safe mode
-        if ( ! ini_get('safe_mode') && ! ini_get('open_basedir')) {
+        if (!ini_get('safe_mode') && !ini_get('open_basedir')) {
             curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
         }
 
@@ -731,10 +711,10 @@ class RequestCore
             curl_setopt($curl_handle, CURLOPT_HTTPPROXYTUNNEL, true);
 
             $host = $this->proxy['host'];
-            $host .= ( $this->proxy['port'] ) ? ':' . $this->proxy['port'] : '';
+            $host .= ($this->proxy['port']) ? ':' . $this->proxy['port'] : '';
             curl_setopt($curl_handle, CURLOPT_PROXY, $host);
 
-            if (isset( $this->proxy['user'] ) && isset( $this->proxy['pass'] )) {
+            if (isset($this->proxy['user'], $this->proxy['pass'])) {
                 curl_setopt($curl_handle, CURLOPT_PROXYUSERPWD, $this->proxy['user'] . ':' . $this->proxy['pass']);
             }
         }
@@ -751,8 +731,8 @@ class RequestCore
         }
 
         // Process custom headers
-        if (isset( $this->request_headers ) && count($this->request_headers)) {
-            $temp_headers = array();
+        if (isset($this->request_headers) && count($this->request_headers)) {
+            $temp_headers = [];
 
             foreach ($this->request_headers as $k => $v) {
                 $temp_headers[] = $k . ': ' . $v;
@@ -765,8 +745,9 @@ class RequestCore
             case self::HTTP_PUT:
                 //unset($this->read_stream);
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'PUT');
-                if (isset( $this->read_stream )) {
-                    if ( ! isset( $this->read_stream_size ) || $this->read_stream_size < 0) {
+
+                if (isset($this->read_stream)) {
+                    if (!isset($this->read_stream_size) || $this->read_stream_size < 0) {
                         throw new Exception('[RequestCoreException] The stream size for the streaming upload cannot be determined.');
                     }
 
@@ -776,21 +757,19 @@ class RequestCore
                     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
                 }
                 break;
-
             case self::HTTP_POST:
                 curl_setopt($curl_handle, CURLOPT_POST, true);
                 curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
                 break;
-
             case self::HTTP_HEAD:
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, self::HTTP_HEAD);
                 curl_setopt($curl_handle, CURLOPT_NOBODY, 1);
                 break;
-
             default: // Assumed GET
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $this->method);
-                if (isset( $this->write_stream )) {
-                    curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, array( $this, 'streaming_write_callback' ));
+
+                if (isset($this->write_stream)) {
+                    curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, [$this, 'streaming_write_callback']);
                     curl_setopt($curl_handle, CURLOPT_HEADER, false);
                 } else {
                     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
@@ -799,7 +778,7 @@ class RequestCore
         }
 
         // Merge in the CURLOPTs
-        if (isset( $this->curlopts ) && sizeof($this->curlopts) > 0) {
+        if (isset($this->curlopts) && sizeof($this->curlopts) > 0) {
             foreach ($this->curlopts as $k => $v) {
                 curl_setopt($curl_handle, $k, $v);
             }
@@ -808,16 +787,15 @@ class RequestCore
         return $curl_handle;
     }
 
-
     /**
      * Take the post-processed cURL data and break it down into useful header/body/info chunks. Uses the
      * data stored in the `curl_handle` and `response` properties unless replacement data is passed in via
      * parameters.
      *
-     * @param resource $curl_handle (Optional) The reference to the already executed cURL request.
-     * @param string   $response    (Optional) The actual response content itself that needs to be parsed.
+     * @param resource $curl_handle (Optional) The reference to the already executed cURL request
+     * @param string   $response    (Optional) The actual response content itself that needs to be parsed
      *
-     * @return ResponseCore A <ResponseCore> object containing a parsed HTTP response.
+     * @return ResponseCore a <ResponseCore> object containing a parsed HTTP response
      */
     public function process_response($curl_handle = null, $response = null)
     {
@@ -843,10 +821,10 @@ class RequestCore
             array_shift($this->response_headers);
 
             // Loop through and split up the headers.
-            $header_assoc = array();
+            $header_assoc = [];
             foreach ($this->response_headers as $header) {
                 $kv                               = explode(': ', $header);
-                $header_assoc[strtolower($kv[0])] = isset( $kv[1] ) ? $kv[1] : '';
+                $header_assoc[strtolower($kv[0])] = isset($kv[1]) ? $kv[1] : '';
             }
 
             // Reset the headers to the appropriate property.
@@ -855,8 +833,12 @@ class RequestCore
             $this->response_headers['_info']['method'] = $this->method;
 
             if ($curl_handle && $response) {
-                return new $this->response_class($this->response_headers, $this->response_body, $this->response_code,
-                    $this->curl_handle);
+                return new $this->response_class(
+                    $this->response_headers,
+                    $this->response_body,
+                    $this->response_code,
+                    $this->curl_handle
+                );
             }
         }
 
@@ -864,11 +846,10 @@ class RequestCore
         return false;
     }
 
-
     /**
      * Sends the request using <php:curl_multi_exec()>, enabling parallel requests. Uses the "rolling" method.
      *
-     * @param array $handles (Required) An indexed array of cURL handles to process simultaneously.
+     * @param array $handles (Required) An indexed array of cURL handles to process simultaneously
      * @param array $opt     (Optional) An associative array of parameters that can have the following keys: <ul>
      *                       <li><code>callback</code> - <code>string|array</code> - Optional - The string name of a
      *                       function to pass the response data to. If this is a method, pass an array where the
@@ -878,7 +859,7 @@ class RequestCore
      *                       requests to make. This can be useful for scaling around slow server responses. Defaults to
      *                       trusting cURLs judgement as to how many to use.</li></ul>
      *
-     * @return array Post-processed cURL responses.
+     * @return array post-processed cURL responses
      */
     public function send_multi_request($handles, $opt = null)
     {
@@ -886,21 +867,21 @@ class RequestCore
 
         // Skip everything if there are no handles to process.
         if (count($handles) === 0) {
-            return array();
+            return [];
         }
 
-        if ( ! $opt) {
-            $opt = array();
+        if (!$opt) {
+            $opt = [];
         }
 
         // Initialize any missing options
-        $limit = isset( $opt['limit'] ) ? $opt['limit'] : -1;
+        $limit = isset($opt['limit']) ? $opt['limit'] : -1;
 
         // Initialize
         $handle_list  = $handles;
         $http         = new $this->request_class();
         $multi_handle = curl_multi_init();
-        $handles_post = array();
+        $handles_post = [];
         $added        = count($handles);
         $last_handle  = null;
         $count        = 0;
@@ -919,7 +900,7 @@ class RequestCore
             $active = false;
 
             // Start executing and wait for a response.
-            while (( $status = curl_multi_exec($multi_handle, $active) ) === CURLM_CALL_MULTI_PERFORM) {
+            while (($status = curl_multi_exec($multi_handle, $active)) === CURLM_CALL_MULTI_PERFORM) {
                 // Start looking for possible responses immediately when we have to add more handles
                 if (count($handles) > 0) {
                     break;
@@ -927,14 +908,15 @@ class RequestCore
             }
 
             // Figure out which requests finished.
-            $to_process = array();
+            $to_process = [];
 
             while ($done = curl_multi_info_read($multi_handle)) {
                 // Since curl_errno() isn't reliable for handles that were in multirequests, we check the 'result' of the info read, which contains the curl error number, (listed here http://curl.haxx.se/libcurl/c/libcurl-errors.html )
                 if ($done['result'] > 0) {
                     throw new Exception('[RequestCoreException] cURL resource: ' . (string) $done['handle'] . '; cURL error: ' . curl_error($done['handle']) . ' (' . $done['result'] . ')');
                 } // Because curl_multi_info_read() might return more than one message about a request, we check to see if this request is already in our array of completed requests
-                elseif ( ! isset( $to_process[(int) $done['handle']] )) {
+
+                if (!isset($to_process[(int) $done['handle']])) {
                     $to_process[(int) $done['handle']] = $done;
                 }
             }
@@ -961,8 +943,7 @@ class RequestCore
         return $handles_post;
     }
 
-
-    /*%******************************************************************************************%*/
+    // %******************************************************************************************%
     // RESPONSE METHODS
 
     /**
@@ -970,7 +951,7 @@ class RequestCore
      *
      * @param string $header (Optional) A specific header value to return. Defaults to all headers.
      *
-     * @return string|array All or selected header values.
+     * @return array|string all or selected header values
      */
     public function get_response_header($header = null)
     {
@@ -981,22 +962,20 @@ class RequestCore
         return $this->response_headers;
     }
 
-
     /**
      * Get the HTTP response body from the request.
      *
-     * @return string The response body.
+     * @return string the response body
      */
     public function get_response_body()
     {
         return $this->response_body;
     }
 
-
     /**
      * Get the HTTP response code from the request.
      *
-     * @return string The HTTP response code.
+     * @return string the HTTP response code
      */
     public function get_response_code()
     {

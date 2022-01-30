@@ -1,22 +1,23 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 use Aliyun\SLS\Models\Config;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the GetLog API from log service.
+ *
  * @author log service dev
  */
 class GetConfigResponse extends Response
 {
-
     private $config;
 
-
     /**
-     * GetConfigResponse constructor
+     * GetConfigResponse constructor.
      *
      * @param array $resp   GetLogs HTTP response body
      * @param array $header GetLogs HTTP response header
@@ -28,10 +29,8 @@ class GetConfigResponse extends Response
         $this->config->setFromArray($resp);
     }
 
-
     public function getConfig()
     {
         return $this->config;
     }
-
 }

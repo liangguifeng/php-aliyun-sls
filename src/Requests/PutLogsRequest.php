@@ -1,15 +1,17 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to send data to log server.
+ *
  * @author log service dev
  */
 class PutLogsRequest extends Request
 {
-
     /**
      * @var string logStore name
      */
@@ -30,9 +32,8 @@ class PutLogsRequest extends Request
      */
     private $logItems;
 
-
     /**
-     * PutLogsRequest cnstructor
+     * PutLogsRequest cnstructor.
      *
      * @param string $project  project name
      * @param string $logStore logStore name
@@ -49,9 +50,8 @@ class PutLogsRequest extends Request
         $this->logItems = $logItems;
     }
 
-
     /**
-     * Get logStore  name
+     * Get logStore  name.
      *
      * @return string logStore name
      */
@@ -60,21 +60,19 @@ class PutLogsRequest extends Request
         return $this->logStore;
     }
 
-
     /**
-     * Set logStore name
+     * Set logStore name.
      *
      * @param string $logStore
-     *            logStore name
+     *                         logStore name
      */
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
 
-
     /**
-     * Get topic name
+     * Get topic name.
      *
      * @return string topic name
      */
@@ -83,21 +81,19 @@ class PutLogsRequest extends Request
         return $this->topic;
     }
 
-
     /**
-     * Set topic name
+     * Set topic name.
      *
      * @param string $topic
-     *            topic name
+     *                      topic name
      */
     public function setTopic($topic)
     {
         $this->topic = $topic;
     }
 
-
     /**
-     * Get all the log data
+     * Get all the log data.
      *
      * @return array LogItem array, log data
      */
@@ -106,9 +102,8 @@ class PutLogsRequest extends Request
         return $this->logItems;
     }
 
-
     /**
-     * Set the log data
+     * Set the log data.
      *
      * @param array $logItems LogItem array, log data
      */
@@ -117,9 +112,8 @@ class PutLogsRequest extends Request
         $this->logItems = $logItems;
     }
 
-
     /**
-     * Get log source
+     * Get log source.
      *
      * @return string log source
      */
@@ -128,12 +122,11 @@ class PutLogsRequest extends Request
         return $this->source;
     }
 
-
     /**
-     * set log source
+     * set log source.
      *
      * @param string $source
-     *            log source
+     *                       log source
      */
     public function setSource($source)
     {

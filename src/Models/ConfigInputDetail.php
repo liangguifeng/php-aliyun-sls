@@ -1,8 +1,9 @@
-<?php namespace Aliyun\SLS\Models;
+<?php
+
+namespace Aliyun\SLS\Models;
 
 class ConfigInputDetail
 {
-
     public $filePattern;
 
     public $key;
@@ -25,18 +26,17 @@ class ConfigInputDetail
 
     public $topicFormat;
 
-
     public function __construct(
         $filePattern = '',
-        $key = array(),
+        $key = [],
         $localStorage = true,
         $logBeginRegex = '',
         $logPath = '',
         $logType = '',
         $regex = '',
         $timeFormat = '',
-        $filterRegex = array(),
-        $filterKey = array(),
+        $filterRegex = [],
+        $filterKey = [],
         $topicFormat = 'none'
     ) {
         $this->filePattern   = $filePattern;
@@ -52,40 +52,50 @@ class ConfigInputDetail
         $this->topicFormat   = $topicFormat;
     }
 
-
     public function toArray()
     {
-        $resArray = array();
+        $resArray = [];
+
         if ($this->filePattern !== null) {
             $resArray['filePattern'] = $this->filePattern;
         }
+
         if ($this->key !== null) {
             $resArray['key'] = $this->key;
         }
+
         if ($this->localStorage !== null) {
             $resArray['localStorage'] = $this->localStorage;
         }
+
         if ($this->logBeginRegex !== null) {
             $resArray['logBeginRegex'] = $this->logBeginRegex;
         }
+
         if ($this->logPath !== null) {
             $resArray['logPath'] = $this->logPath;
         }
+
         if ($this->logType !== null) {
             $resArray['logType'] = $this->logType;
         }
+
         if ($this->regex !== null) {
             $resArray['regex'] = $this->regex;
         }
+
         if ($this->timeFormat !== null) {
             $resArray['timeFormat'] = $this->timeFormat;
         }
+
         if ($this->filterRegex !== null) {
             $resArray['filterRegex'] = $this->filterRegex;
         }
+
         if ($this->filterKey !== null) {
             $resArray['filterKey'] = $this->filterKey;
         }
+
         if ($this->topicFormat !== null) {
             $resArray['topicFormat'] = $this->topicFormat;
         }

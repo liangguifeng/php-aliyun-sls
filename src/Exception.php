@@ -1,8 +1,10 @@
-<?php namespace Aliyun\SLS;
+<?php
+
+namespace Aliyun\SLS;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The Exception of the log service request & response.
  *
@@ -10,19 +12,17 @@
  */
 class Exception extends \Exception
 {
-
     /**
      * @var string
      */
     private $requestId;
 
-
     /**
-     * Exception constructor
+     * Exception constructor.
      *
-     * @param string $code      log service error code.
-     * @param string $message   detailed information for the exception.
-     * @param string $requestId the request id of the response, '' is set if client error.
+     * @param string $code      log service error code
+     * @param string $message   detailed information for the exception
+     * @param string $requestId the request id of the response, '' is set if client error
      */
     public function __construct($message, $code = 0, $requestId = '')
     {
@@ -32,7 +32,6 @@ class Exception extends \Exception
         $this->requestId = $requestId;
     }
 
-
     /**
      * The __toString() method allows a class to decide how it will react when
      * it is treated like a string.
@@ -41,9 +40,8 @@ class Exception extends \Exception
      */
     public function __toString()
     {
-        return "Exception: \n{\n    ErrorCode: $this->code,\n    ErrorMessage: $this->message\n    RequestId: $this->requestId\n}\n";
+        return "Exception: \n{\n    ErrorCode: {$this->code},\n    ErrorMessage: {$this->message}\n    RequestId: {$this->requestId}\n}\n";
     }
-
 
     /**
      * Get Exception error code.
@@ -55,7 +53,6 @@ class Exception extends \Exception
         return $this->code;
     }
 
-
     /**
      * Get Exception error message.
      *
@@ -65,7 +62,6 @@ class Exception extends \Exception
     {
         return $this->message;
     }
-
 
     /**
      * Get log service sever requestid, '' is set if client or Http error.
@@ -77,4 +73,3 @@ class Exception extends \Exception
         return $this->requestId;
     }
 }
-

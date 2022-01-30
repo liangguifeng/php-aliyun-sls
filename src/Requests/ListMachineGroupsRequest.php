@@ -1,24 +1,27 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * @author log service dev
  */
 class ListMachineGroupsRequest extends Request
 {
-
     private $groupName;
 
     private $offset;
 
     private $size;
 
-
     /**
-     * ListMachineGroupsRequest Constructor
+     * ListMachineGroupsRequest Constructor.
      *
+     * @param null|mixed $groupName
+     * @param null|mixed $offset
+     * @param null|mixed $size
      */
     public function __construct($groupName = null, $offset = null, $size = null)
     {
@@ -27,36 +30,30 @@ class ListMachineGroupsRequest extends Request
         $this->size      = $size;
     }
 
-
     public function getGroupName()
     {
         return $this->groupName;
     }
-
 
     public function setGroupName($groupName)
     {
         $this->groupName = $groupName;
     }
 
-
     public function getOffset()
     {
         return $this->offset;
     }
-
 
     public function setOffset($offset)
     {
         $this->offset = $offset;
     }
 
-
     public function getSize()
     {
         return $this->size;
     }
-
 
     public function setSize($size)
     {

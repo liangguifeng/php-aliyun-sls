@@ -1,24 +1,24 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the GetCursor API from log service.
+ *
  * @author log service dev
  */
 class GetCursorResponse extends Response
 {
-
     /**
      * @var string cursor
-     *
      */
     private $cursor;
 
-
     /**
-     * GetCursorResponse constructor
+     * GetCursorResponse constructor.
      *
      * @param array $resp   GetLogs HTTP response body
      * @param array $header GetLogs HTTP response header
@@ -29,9 +29,8 @@ class GetCursorResponse extends Response
         $this->cursor = $resp['cursor'];
     }
 
-
     /**
-     * Get cursor from the response
+     * Get cursor from the response.
      *
      * @return string cursor
      */

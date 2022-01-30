@@ -1,23 +1,24 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The base request of all log request.
+ *
  * @author log service dev
  */
 class Request
 {
-
     /**
      * @var string project name
      */
     protected $project;
 
-
     /**
-     * Get project name
+     * Get project name.
      *
      * @return string project name
      */
@@ -26,12 +27,11 @@ class Request
         return $this->project;
     }
 
-
     /**
-     * Set project name
+     * Set project name.
      *
      * @param string $project
-     *            project name
+     *                        project name
      */
     public function setProject($project)
     {

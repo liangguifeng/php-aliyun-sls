@@ -1,15 +1,17 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to get cursor by fromTime or begin/end mode
+ *
  * @author log service dev
  */
 class GetCursorRequest extends Request
 {
-
     /**
      * @var string logStore name
      */
@@ -23,21 +25,20 @@ class GetCursorRequest extends Request
     //mode and fromTime: choose one and another remains null
     /**
      * @var string value should be 'begin' or 'end'
-     *         begin:return cursor point to first loggroup
-     *         end:return cursor point to position after last loggroup
-     *         if $mode is set to not null,$fromTime must be set null
+     *             begin:return cursor point to first loggroup
+     *             end:return cursor point to position after last loggroup
+     *             if $mode is set to not null,$fromTime must be set null
      */
     private $mode;
 
     /**
-     * @var integer unix_timestamp
-     *         return cursor point to first logGroup whose time after $fromTime
+     * @var int unix_timestamp
+     *          return cursor point to first logGroup whose time after $fromTime
      */
     private $fromTime;
 
-
     /**
-     * GetCursorRequest Constructor
+     * GetCursorRequest Constructor.
      *
      * @param string $project  project name
      * @param string $logStore logStore name
@@ -54,9 +55,8 @@ class GetCursorRequest extends Request
         $this->fromTime = $fromTime;
     }
 
-
     /**
-     * Get logStore name
+     * Get logStore name.
      *
      * @return string logStore name
      */
@@ -65,21 +65,19 @@ class GetCursorRequest extends Request
         return $this->logStore;
     }
 
-
     /**
-     * Set logStore name
+     * Set logStore name.
      *
      * @param string $logStore
-     *            logStore name
+     *                         logStore name
      */
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
 
-
     /**
-     * Get shard id
+     * Get shard id.
      *
      * @return string shard id
      */
@@ -88,21 +86,19 @@ class GetCursorRequest extends Request
         return $this->shardId;
     }
 
-
     /**
-     * Set shard id
+     * Set shard id.
      *
      * @param string $shardId
-     *            shard id
+     *                        shard id
      */
     public function setShardId($shardId)
     {
         $this->shardId = $shardId;
     }
 
-
     /**
-     * Get mode
+     * Get mode.
      *
      * @return string mode
      */
@@ -111,21 +107,19 @@ class GetCursorRequest extends Request
         return $this->mode;
     }
 
-
     /**
-     * Set mode
+     * Set mode.
      *
      * @param string $mode
-     *            value must be 'begin' or 'end'
+     *                     value must be 'begin' or 'end'
      */
     public function setMode($mode)
     {
         $this->mode = $mode;
     }
 
-
     /**
-     * Get from time
+     * Get from time.
      *
      * @return integer(unix_timestamp) from time
      */
@@ -134,16 +128,14 @@ class GetCursorRequest extends Request
         return $this->fromTime;
     }
 
-
     /**
-     * Set from time
+     * Set from time.
      *
-     * @param integer $fromTime
-     *            from time (unix_timestamp)
+     * @param int $fromTime
+     *                      from time (unix_timestamp)
      */
     public function setFromTime($fromTime)
     {
         $this->fromTime = $fromTime;
     }
-
 }

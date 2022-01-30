@@ -1,29 +1,30 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to delete logStore from log service.
+ *
  * @author log service dev
  */
 class DeleteLogStoreRequest extends Request
 {
-
     private $logStore;
 
-
     /**
-     * DeleteLogStoreRequest constructor
+     * DeleteLogStoreRequest constructor.
      *
-     * @param string $project project name
+     * @param string     $project  project name
+     * @param null|mixed $logStore
      */
     public function __construct($project = null, $logStore = null)
     {
         $this->project  = $project;
         $this->logStore = $logStore;
     }
-
 
     public function getLogStore()
     {

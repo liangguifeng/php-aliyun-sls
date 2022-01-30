@@ -1,27 +1,28 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 use Aliyun\SLS\Models\MachineGroup;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the GetLog API from log service.
+ *
  * @author log service dev
  */
 class GetMachineGroupResponse extends Response
 {
-
     private $machineGroup;
 
-
     /**
-     * GetMachineGroupResponse constructor
+     * GetMachineGroupResponse constructor.
      *
      * @param array $resp
-     *            GetLogs HTTP response body
+     *                      GetLogs HTTP response body
      * @param array $header
-     *            GetLogs HTTP response header
+     *                      GetLogs HTTP response header
      */
     public function __construct($resp, $header)
     {
@@ -30,10 +31,8 @@ class GetMachineGroupResponse extends Response
         $this->machineGroup->setFromArray($resp);
     }
 
-
     public function getMachineGroup()
     {
         return $this->machineGroup;
     }
-
 }

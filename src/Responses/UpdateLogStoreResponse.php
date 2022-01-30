@@ -1,17 +1,19 @@
-<?php namespace Aliyun\SLS\Responses;
+<?php
+
+namespace Aliyun\SLS\Responses;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The response of the UpdateLogStore API from log service.
+ *
  * @author log service dev
  */
 class UpdateLogStoreResponse extends Response
 {
-
     /**
-     * UpdateLogStoreResponse constructor
+     * UpdateLogStoreResponse constructor.
      *
      * @param array $resp   UpdateLogStore HTTP response body
      * @param array $header UpdateLogStore HTTP response header
@@ -20,5 +22,4 @@ class UpdateLogStoreResponse extends Response
     {
         parent::__construct($header);
     }
-
 }

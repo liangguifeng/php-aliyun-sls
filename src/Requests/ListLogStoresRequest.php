@@ -1,17 +1,19 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to list logStore from log service.
+ *
  * @author log service dev
  */
 class ListLogStoresRequest extends Request
 {
-
     /**
-     * ListLogStoresRequest constructor
+     * ListLogStoresRequest constructor.
      *
      * @param string $project project name
      */

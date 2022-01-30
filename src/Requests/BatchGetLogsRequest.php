@@ -1,15 +1,17 @@
-<?php namespace Aliyun\SLS\Requests;
+<?php
+
+namespace Aliyun\SLS\Requests;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The request used to get logs by logStore and shardId from log service.
+ *
  * @author log service dev
  */
 class BatchGetLogsRequest extends Request
 {
-
     /**
      * @var string logStore name
      */
@@ -21,7 +23,7 @@ class BatchGetLogsRequest extends Request
     private $shardId;
 
     /**
-     * @var integer max line number of return logs
+     * @var int max line number of return logs
      */
     private $count;
 
@@ -30,15 +32,14 @@ class BatchGetLogsRequest extends Request
      */
     private $cursor;
 
-
     /**
-     * BatchGetLogsRequest Constructor
+     * BatchGetLogsRequest Constructor.
      *
-     * @param string  $project  project name
-     * @param string  $logStore logStore name
-     * @param string  $shardId  shard ID
-     * @param integer $count    return max logGroup numbers
-     * @param string  $cursor   start cursor
+     * @param string $project  project name
+     * @param string $logStore logStore name
+     * @param string $shardId  shard ID
+     * @param int    $count    return max logGroup numbers
+     * @param string $cursor   start cursor
      */
     public function __construct($project = null, $logStore = null, $shardId = null, $count = null, $cursor = null)
     {
@@ -49,9 +50,8 @@ class BatchGetLogsRequest extends Request
         $this->cursor   = $cursor;
     }
 
-
     /**
-     * Get logStore name
+     * Get logStore name.
      *
      * @return string logStore name
      */
@@ -60,21 +60,19 @@ class BatchGetLogsRequest extends Request
         return $this->logStore;
     }
 
-
     /**
-     * Set logStore name
+     * Set logStore name.
      *
      * @param string $logStore
-     *            logStore name
+     *                         logStore name
      */
     public function setLogStore($logStore)
     {
         $this->logStore = $logStore;
     }
 
-
     /**
-     * Get shard ID
+     * Get shard ID.
      *
      * @return string shardId
      */
@@ -83,44 +81,40 @@ class BatchGetLogsRequest extends Request
         return $this->shardId;
     }
 
-
     /**
-     * Set shard ID
+     * Set shard ID.
      *
      * @param string $shardId
-     *            shard ID
+     *                        shard ID
      */
     public function setShardId($shardId)
     {
         $this->shardId = $shardId;
     }
 
-
     /**
-     * Get max return logGroup number
+     * Get max return logGroup number.
      *
-     * @return integer count
+     * @return int count
      */
     public function getCount()
     {
         return $this->count;
     }
 
-
     /**
-     * Set max return logGroup number
+     * Set max return logGroup number.
      *
-     * @param integer $count
-     *            max return logGroup number
+     * @param int $count
+     *                   max return logGroup number
      */
     public function setCount($count)
     {
         $this->count = $count;
     }
 
-
     /**
-     * Get start cursor
+     * Get start cursor.
      *
      * @return string cursor
      */
@@ -129,16 +123,14 @@ class BatchGetLogsRequest extends Request
         return $this->cursor;
     }
 
-
     /**
-     * Set start cursor
+     * Set start cursor.
      *
      * @param string $cursor
-     *            start cursor
+     *                       start cursor
      */
     public function setCursor($cursor)
     {
         $this->cursor = $cursor;
     }
-
 }

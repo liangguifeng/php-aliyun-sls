@@ -1,8 +1,10 @@
-<?php namespace Aliyun\SLS\Models;
+<?php
+
+namespace Aliyun\SLS\Models;
 
 /**
  * Copyright (C) Alibaba Cloud Computing
- * All rights reserved
+ * All rights reserved.
  *
  * The class used to present the result of log histogram status. For every log
  * histogram, it contains : from/to time range, hit log count and query
@@ -12,19 +14,18 @@
  */
 class Histogram
 {
-
     /**
-     * @var integer the begin time
+     * @var int the begin time
      */
     private $from;
 
     /**
-     * @var integer the end time
+     * @var int the end time
      */
     private $to;
 
     /**
-     * @var integer log count of histogram that query hits
+     * @var int log count of histogram that query hits
      */
     private $count;
 
@@ -33,18 +34,17 @@ class Histogram
      */
     private $progress;
 
-
     /**
-     * Histogram constructor
+     * Histogram constructor.
      *
-     * @param integer $from
-     *            the begin time
-     * @param integer $to
-     *            the end time
-     * @param integer $count
-     *            log count of histogram that query hits
-     * @param string  $progress
-     *            histogram query status(Complete or InComplete)
+     * @param int    $from
+     *                         the begin time
+     * @param int    $to
+     *                         the end time
+     * @param int    $count
+     *                         log count of histogram that query hits
+     * @param string $progress
+     *                         histogram query status(Complete or InComplete)
      */
     public function __construct($from, $to, $count, $progress)
     {
@@ -54,42 +54,38 @@ class Histogram
         $this->progress = $progress;
     }
 
-
     /**
-     * Get begin time
+     * Get begin time.
      *
-     * @return integer the begin time
+     * @return int the begin time
      */
     public function getFrom()
     {
         return $this->from;
     }
 
-
     /**
-     * Get the end time
+     * Get the end time.
      *
-     * @return integer the end time
+     * @return int the end time
      */
     public function getTo()
     {
         return $this->to;
     }
 
-
     /**
-     * Get log count of histogram that query hits
+     * Get log count of histogram that query hits.
      *
-     * @return integer log count of histogram that query hits
+     * @return int log count of histogram that query hits
      */
     public function getCount()
     {
         return $this->count;
     }
 
-
     /**
-     * Check if the histogram is completed
+     * Check if the histogram is completed.
      *
      * @return bool true if this histogram is completed
      */
