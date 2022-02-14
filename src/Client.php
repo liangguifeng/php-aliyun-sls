@@ -310,7 +310,7 @@ class Client
         try {
             list ( $responseCode, $header, $resBody ) = $this->getHttpResponse($method, $url, $body, $headers);
         } catch (Exception $ex) {
-            throw new Exception($ex->getMessage() . $ex->__toString());
+            throw new Exception($ex->getMessage() . $ex->__toString() . $method . $url . $body . $headers);
         }
 
         $requestId = isset ( $header['x-log-requestid'] ) ? $header['x-log-requestid'] : '';
