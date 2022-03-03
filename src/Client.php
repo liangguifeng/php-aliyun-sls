@@ -331,26 +331,26 @@ class Client
     {
         try {
             list($responseCode, $header, $resBody) = $this->getHttpResponse($method, $url, $body, $headers);
-
-            $requestId = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
-
-            if ($responseCode == 200) {
-                return [$resBody, $header];
-            }
-            $exJson = $this->parseToJson($resBody, $requestId);
-
-            if (isset($exJson['error_code'], $exJson['error_message'])) {
-                throw new Exception($exJson['error_message'], $exJson['error_code'], $requestId);
-            }
-
-            if ($exJson) {
-                $exJson = ' The return json is ' . json_encode($exJson);
-            } else {
-                $exJson = '';
-            }
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage() . $ex->__toString() . $method . $url . $body . $headers);
         }
+        $requestId = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
+
+        if ($responseCode == 200) {
+            return [$resBody, $header];
+        }
+        $exJson = $this->parseToJson($resBody, $requestId);
+
+        if (isset($exJson['error_code'], $exJson['error_message'])) {
+            throw new Exception($exJson['error_message'], $exJson['error_code'], $requestId);
+        }
+
+        if ($exJson) {
+            $exJson = ' The return json is ' . json_encode($exJson);
+        } else {
+            $exJson = '';
+        }
+
         throw new Exception(
             "[RequestError] Request is failed. Http code is {$responseCode}.{$exJson}",
             0,
