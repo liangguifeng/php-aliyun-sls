@@ -46,7 +46,7 @@ class Util
                     }
                 }
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
         }
 
         if (isset($_ENV['HOSTNAME'])) {
