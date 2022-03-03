@@ -217,12 +217,12 @@ class Client
             throw new Exception("[InvalidLogSize] logItem's size exceeds maximum limitation: 3 MB.");
         }
 
-        $params                         = [];
-        $headers                        = [];
-        $headers['x-log-bodyrawsize']   = $bodySize;
-        $headers['x-log-compresstype']  = 'deflate';
-        $headers['Content-Type']        = 'application/x-protobuf';
-        $body                           = gzcompress($body, 6);
+        $params                        = [];
+        $headers                       = [];
+        $headers['x-log-bodyrawsize']  = $bodySize;
+        $headers['x-log-compresstype'] = 'deflate';
+        $headers['Content-Type']       = 'application/x-protobuf';
+        $body                          = gzcompress($body, 6);
 
         $logStore = $request->getLogStore() ?: '';
         $project  = $request->getProject() ?: '';
@@ -277,8 +277,8 @@ class Client
         } else {
             $headers['Host'] = "{$project}.{$this->logHost}";
         }
-        $headers['Date']           = $this->getGMT();
-        $signature                 = Util::getRequestAuthorization(
+        $headers['Date'] = $this->getGMT();
+        $signature       = Util::getRequestAuthorization(
             $method,
             $resource,
             $this->accessKey,
@@ -331,25 +331,25 @@ class Client
     {
         try {
             list($responseCode, $header, $resBody) = $this->getHttpResponse($method, $url, $body, $headers);
+
+            $requestId = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
+
+            if ($responseCode == 200) {
+                return [$resBody, $header];
+            }
+            $exJson = $this->parseToJson($resBody, $requestId);
+
+            if (isset($exJson['error_code'], $exJson['error_message'])) {
+                throw new Exception('test111111111');
+            }
+
+            if ($exJson) {
+                $exJson = ' The return json is ' . json_encode($exJson);
+            } else {
+                $exJson = '';
+            }
         } catch (Exception $ex) {
-
-        }
-
-        $requestId = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
-
-        if ($responseCode == 200) {
-            return [$resBody, $header];
-        }
-        $exJson = $this->parseToJson($resBody, $requestId);
-
-        if (isset($exJson['error_code'], $exJson['error_message'])) {
-            throw new Exception($exJson['error_message'], $exJson['error_code'], $requestId);
-        }
-
-        if ($exJson) {
-            $exJson = ' The return json is ' . json_encode($exJson);
-        } else {
-            $exJson = '';
+            throw new Exception('test1');
         }
         throw new Exception(
             "[RequestError] Request is failed. Http code is {$responseCode}.{$exJson}",
@@ -382,10 +382,10 @@ class Client
         }
 
         $request->send_request();
-        $response    = [];
-        $response[]  = (int) $request->get_response_code();
-        $response[]  = $request->get_response_header();
-        $response[]  = $request->get_response_body();
+        $response   = [];
+        $response[] = (int) $request->get_response_code();
+        $response[] = $request->get_response_header();
+        $response[] = $request->get_response_body();
 
         return $response;
     }
@@ -440,10 +440,10 @@ class Client
             'ttl'          => (int) ($request->getTtl()),
             'shardCount'   => (int) ($request->getShardCount()),
         ];
-        $body_str                     = json_encode($body);
-        list($resp, $header)          = $this->send('POST', $project, $body_str, $resource, $params, $headers);
-        $requestId                    = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
-        $resp                         = $this->parseToJson($resp, $requestId);
+        $body_str            = json_encode($body);
+        list($resp, $header) = $this->send('POST', $project, $body_str, $resource, $params, $headers);
+        $requestId           = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
+        $resp                = $this->parseToJson($resp, $requestId);
 
         return new CreateLogStoreResponse($resp, $header);
     }
@@ -469,11 +469,11 @@ class Client
             'ttl'          => (int) ($request->getTtl()),
             'shardCount'   => (int) ($request->getShardCount()),
         ];
-        $resource                     = '/logstores/' . $request->getLogStore();
-        $body_str                     = json_encode($body);
-        list($resp, $header)          = $this->send('PUT', $project, $body_str, $resource, $params, $headers);
-        $requestId                    = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
-        $resp                         = $this->parseToJson($resp, $requestId);
+        $resource            = '/logstores/' . $request->getLogStore();
+        $body_str            = json_encode($body);
+        list($resp, $header) = $this->send('PUT', $project, $body_str, $resource, $params, $headers);
+        $requestId           = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
+        $resp                = $this->parseToJson($resp, $requestId);
 
         return new UpdateLogStoreResponse($resp, $header);
     }
@@ -800,9 +800,9 @@ class Client
             $body = json_encode($request->getConfig()->toArray());
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/configs';
-        list($resp, $header)      = $this->send('POST', null, $body, $resource, $params, $headers);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/configs';
+        list($resp, $header)     = $this->send('POST', null, $body, $resource, $params, $headers);
 
         return new CreateConfigResponse($header);
     }
@@ -819,9 +819,9 @@ class Client
             $configName = $request->getConfig()->getConfigName() ?: '';
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/configs/' . $configName;
-        list($resp, $header)      = $this->send('PUT', null, $body, $resource, $params, $headers);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/configs/' . $configName;
+        list($resp, $header)     = $this->send('PUT', null, $body, $resource, $params, $headers);
 
         return new UpdateConfigResponse($header);
     }
@@ -890,9 +890,9 @@ class Client
             $body = json_encode($request->getMachineGroup()->toArray());
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/machinegroups';
-        list($resp, $header)      = $this->send('POST', null, $body, $resource, $params, $headers);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/machinegroups';
+        list($resp, $header)     = $this->send('POST', null, $body, $resource, $params, $headers);
 
         return new CreateMachineGroupResponse($header);
     }
@@ -909,9 +909,9 @@ class Client
             $groupName = $request->getMachineGroup()->getGroupName() ?: '';
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/machinegroups/' . $groupName;
-        list($resp, $header)      = $this->send('PUT', null, $body, $resource, $params, $headers);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/machinegroups/' . $groupName;
+        list($resp, $header)     = $this->send('PUT', null, $body, $resource, $params, $headers);
 
         return new UpdateMachineGroupResponse($header);
     }
@@ -971,26 +971,26 @@ class Client
 
     public function applyConfigToMachineGroup(ApplyConfigToMachineGroupRequest $request)
     {
-        $params                   = [];
-        $headers                  = [];
-        $configName               = $request->getConfigName();
-        $groupName                = $request->getGroupName();
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/machinegroups/' . $groupName . '/configs/' . $configName;
-        list($resp, $header)      = $this->send('PUT', null, null, $resource, $params, $headers);
+        $params                  = [];
+        $headers                 = [];
+        $configName              = $request->getConfigName();
+        $groupName               = $request->getGroupName();
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/machinegroups/' . $groupName . '/configs/' . $configName;
+        list($resp, $header)     = $this->send('PUT', null, null, $resource, $params, $headers);
 
         return new ApplyConfigToMachineGroupResponse($header);
     }
 
     public function removeConfigFromMachineGroup(RemoveConfigFromMachineGroupRequest $request)
     {
-        $params                   = [];
-        $headers                  = [];
-        $configName               = $request->getConfigName();
-        $groupName                = $request->getGroupName();
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/machinegroups/' . $groupName . '/configs/' . $configName;
-        list($resp, $header)      = $this->send('DELETE', null, null, $resource, $params, $headers);
+        $params                  = [];
+        $headers                 = [];
+        $configName              = $request->getConfigName();
+        $groupName               = $request->getGroupName();
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/machinegroups/' . $groupName . '/configs/' . $configName;
+        list($resp, $header)     = $this->send('DELETE', null, null, $resource, $params, $headers);
 
         return new RemoveConfigFromMachineGroupResponse($header);
     }
@@ -1020,11 +1020,11 @@ class Client
             $body = json_encode($request->getAcl()->toArray());
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/acls';
-        list($resp, $header)      = $this->send('POST', null, $body, $resource, $params, $headers);
-        $requestId                = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
-        $resp                     = $this->parseToJson($resp, $requestId);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/acls';
+        list($resp, $header)     = $this->send('POST', null, $body, $resource, $params, $headers);
+        $requestId               = isset($header['x-log-requestid']) ? $header['x-log-requestid'] : '';
+        $resp                    = $this->parseToJson($resp, $requestId);
 
         return new CreateACLResponse($resp, $header);
     }
@@ -1041,9 +1041,9 @@ class Client
             $aclId = ($request->getAcl()->getAclId() !== null) ? $request->getAcl()->getAclId() : '';
         }
 
-        $headers['Content-Type']  = 'application/json';
-        $resource                 = '/acls/' . $aclId;
-        list($resp, $header)      = $this->send('PUT', null, $body, $resource, $params, $headers);
+        $headers['Content-Type'] = 'application/json';
+        $resource                = '/acls/' . $aclId;
+        list($resp, $header)     = $this->send('PUT', null, $body, $resource, $params, $headers);
 
         return new UpdateACLResponse($header);
     }
